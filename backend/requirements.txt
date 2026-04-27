@@ -1,0 +1,9 @@
+flask
+flask-sqlalchemy
+psycopg2-binary
+flask-cors
+python-dotenv
+opencv-python
+requests
+ultralytics
+twilio

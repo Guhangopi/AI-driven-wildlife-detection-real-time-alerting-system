@@ -1,0 +1,23 @@
+# Node modules
+node_modules/
+dist/
+.vite/
+
+# Python Virtual Environments
+venv/
+env/
+__pycache__/
+
+# AI Models (They are too large for standard GitHub and should be downloaded manually)
+*.pt
+
+# Environmental Variables and Secrets
+.env
+
+# Database files
+*.db
+*.sqlite3
+
+# OS generated files
+.DS_Store
+Thumbs.db
