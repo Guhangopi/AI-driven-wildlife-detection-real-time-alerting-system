@@ -21,7 +21,7 @@ const UsersList = () => {
     const fetchUsers = async () => {
         try {
             // Note: In a real app, pass admin auth tokens
-            const response = await fetch('http://localhost:5000/api/users');
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/users`);
             if (response.ok) {
                 const data = await response.json();
                 setUsers(data);

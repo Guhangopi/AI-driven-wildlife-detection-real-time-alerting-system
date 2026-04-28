@@ -175,8 +175,8 @@ const AlertFeed = () => {
     const fetchData = async () => {
         try {
             const [alertsRes, hotzonesRes] = await Promise.all([
-                fetch('http://localhost:5000/api/alerts'),
-                fetch('http://localhost:5000/api/hotzones')
+                fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/alerts`),
+                fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/hotzones`)
             ]);
             
             if (alertsRes.ok) setAlerts(await alertsRes.json());
@@ -191,7 +191,7 @@ const AlertFeed = () => {
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure you want to delete this alert?')) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/alerts/${id}`, { method: 'DELETE' });
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/alerts/${id}`, { method: 'DELETE' });
             if (res.ok) {
                 setAlerts(alerts.filter(a => a.id !== id));
                 // Optional: refresh hotzones
@@ -206,7 +206,7 @@ const AlertFeed = () => {
 
     const handleUpdate = async (id, updatedData) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/alerts/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/alerts/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedData)
