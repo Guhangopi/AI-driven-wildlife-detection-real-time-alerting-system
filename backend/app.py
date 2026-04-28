@@ -158,7 +158,7 @@ def handle_alerts():
                     fh.write(base64.b64decode(image_data))
                 
                 # URL to access the image (needs a route to serve static files)
-                image_url = f"http://localhost:5000/uploads/{filename}"
+                image_url = f"{request.host_url}uploads/{filename}"
             except Exception as e:
                 print(f"Error saving image: {e}")
 
@@ -237,7 +237,7 @@ def handle_iot_alert():
             with open(filepath, "wb") as fh:
                 fh.write(base64.b64decode(image_data))
             
-            image_url = f"http://localhost:5000/uploads/{filename}"
+            image_url = f"{request.host_url}uploads/{filename}"
         except Exception as e:
             print(f"Error saving image: {e}")
 
