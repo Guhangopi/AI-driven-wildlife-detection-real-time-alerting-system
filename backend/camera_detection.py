@@ -9,7 +9,7 @@ import copy
 from ultralytics import YOLO
 
 # Configuration
-BACKEND_URL = "http://localhost:5000/api/iot/alert"
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:5000/api/iot/alert")
 CAMERA_ID = 0  # 0 for default webcam
 DETECTION_INTERVAL = 15  # Seconds between alerts
 CONFIDENCE_THRESHOLD = 0.5

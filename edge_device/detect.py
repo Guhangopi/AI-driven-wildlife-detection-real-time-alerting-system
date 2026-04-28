@@ -5,7 +5,8 @@ import base64
 from ultralytics import YOLO
 
 # Configuration
-BACKEND_URL = "http://localhost:5000/api/iot/alert"
+import os
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:5000/api/iot/alert")
 CAMERA_INDEX = 0  # Default system webcam
 POLL_INTERVAL = 2  # Process 1 frame every 2 seconds to save processing power
 
