@@ -11,16 +11,22 @@ CORS(app)
 
 # Database Configuration
 # START: Database Config
-# Replace with your actual database credentials
-DB_USER = "postgres"
-DB_PASS = "Guhan@123" # Default password, user might need to change this
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "animal_detection_db"
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # Replace with your actual database credentials
+    DB_USER = "postgres"
+    DB_PASS = "Guhan@123" # Default password, user might need to change this
+    DB_HOST = "localhost"
+    DB_PORT = "5432"
+    DB_NAME = "animal_detection_db"
+    
+    from urllib.parse import quote_plus
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DB_USER}:{quote_plus(DB_PASS)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-from urllib.parse import quote_plus
-
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DB_USER}:{quote_plus(DB_PASS)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # END: Database Config
 
