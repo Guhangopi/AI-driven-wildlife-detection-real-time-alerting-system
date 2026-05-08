@@ -8,14 +8,15 @@ import Login from './components/Login';
 import Register from './components/Register';
 import UsersList from './components/UsersList';
 import GlobalNotification from './components/GlobalNotification';
+import Footer from './components/Footer';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Navbar />
         <GlobalNotification />
-        <main className="pt-16">
+        <main className="flex-grow pt-16">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/dashboard" element={<AlertFeed />} />
@@ -26,6 +27,7 @@ function App() {
             {/* Add more routes as needed */}
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );
