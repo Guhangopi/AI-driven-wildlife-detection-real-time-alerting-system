@@ -48,7 +48,7 @@ const ReportAlert = () => {
                  <div className="absolute top-[10%] left-[20%] w-[50vh] h-[50vh] rounded-full bg-red-100/40 blur-3xl opacity-60" />
              </div>
 
-            <div className="max-w-lg w-full space-y-8 bg-white p-10 rounded-3xl shadow-xl border border-gray-100 z-10 relative">
+            <div className="max-w-lg w-full space-y-8 bg-white p-6 sm:p-10 rounded-3xl shadow-xl border border-gray-100 z-10 relative">
                 <div className="text-center">
                     <div className="mx-auto h-16 w-16 bg-red-100 rounded-full flex items-center justify-center mb-6">
                         <MapPin className="h-8 w-8 text-red-600" />

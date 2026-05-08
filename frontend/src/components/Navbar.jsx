@@ -21,7 +21,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
             <ShieldAlert className="h-8 w-8 text-nature-600" />
-            <span className="font-bold text-lg text-gray-800 tracking-tight flex-shrink-0 mr-4">AI Driven Wildlife Detection and Real Time Alerting System</span>
+            <span className="font-bold text-lg text-gray-800 tracking-tight flex-shrink-0 mr-4">AI Wildlife Alerts</span>
           </Link>
           
           <div className="hidden md:block">

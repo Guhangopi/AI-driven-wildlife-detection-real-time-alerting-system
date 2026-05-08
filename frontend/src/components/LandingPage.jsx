@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Bell, Users, ArrowRight, Camera } from 'lucide-react';
+import { Shield, Bell, Users, Camera } from 'lucide-react';
 
 const LandingPage = () => {
     return (
@@ -13,32 +13,21 @@ const LandingPage = () => {
                 
                 <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-20 pb-24 sm:pb-32 lg:flex lg:py-40 lg:items-center">
                     <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
-                        <div className="mt-24 sm:mt-32 lg:mt-16">
-                            <a href="#" className="inline-flex space-x-6">
-                                <span className="rounded-full bg-nature-600/10 px-3 py-1 text-sm font-semibold leading-6 text-nature-600 ring-1 ring-inset ring-nature-600/10">
-                                    New Version 2.0
-                                </span>
-                                <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-600">
-                                    <span>Just shipped</span>
-                                    <ArrowRight className="h-4 w-4" />
-                                </span>
-                            </a>
-                        </div>
-                        <h1 className="mt-10 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                        <h1 className="mt-16 sm:mt-24 lg:mt-12 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
                             AI Driven Wildlife Detection <br />
                             <span className="text-nature-600">& Real Time Alerting System</span>
                         </h1>
                         <p className="mt-6 text-lg leading-8 text-gray-600">
                             Advanced AI-powered monitoring designed to instantly detect wild animals like leopards and bears, ensuring campus safety through real-time alerts.
                         </p>
-                        <div className="mt-10 flex items-center gap-x-6">
+                        <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 sm:gap-x-6">
                             <Link
                                 to="/login"
-                                className="rounded-md bg-nature-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-nature-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nature-600 transition-all"
+                                className="w-full sm:w-auto text-center rounded-md bg-nature-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-nature-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nature-600 transition-all"
                             >
                                 Member Login
                             </Link>
-                            <Link to="/dashboard" className="text-sm font-semibold leading-6 text-gray-900 flex items-center gap-1 group">
+                            <Link to="/dashboard" className="w-full sm:w-auto text-center justify-center text-sm font-semibold leading-6 text-gray-900 flex items-center gap-1 group py-2.5">
                                 View Live Dashboard <span aria-hidden="true" className="group-hover:translate-x-1 transition-transform">→</span>
                             </Link>
                         </div>
@@ -51,7 +40,7 @@ const LandingPage = () => {
                                 <img
                                     src="/images/hero-leopard.jpg"
                                     alt="Leopard Detection"
-                                    className="w-[60rem] rounded-md shadow-2xl ring-1 ring-gray-900/10 opacity-90"
+                                    className="w-full max-w-[60rem] rounded-md shadow-2xl ring-1 ring-gray-900/10 opacity-90"
                                     onError={(e) => {
                                         e.target.onerror = null; 
                                         e.target.src = "https://placehold.co/1920x1080?text=Leopard+Image+Not+Found";

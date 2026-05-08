@@ -60,7 +60,7 @@ const CampusMap = ({ hotzones }) => {
                      LIVE TRACKING
                 </span>
             </div>
-            <div className="h-[350px] w-full isolate">
+            <div className="h-[250px] sm:h-[350px] w-full isolate">
                 {/* 
                   Leaflet map requires its own stacking context and dimensions.
                   Using isolated context to prevent z-index issues with floating navbars 

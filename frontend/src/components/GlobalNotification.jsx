@@ -77,7 +77,7 @@ const GlobalNotification = () => {
     }
 
     return (
-        <div className="fixed top-20 right-4 sm:right-6 lg:right-8 z-50 animate-in slide-in-from-top-5 fade-in duration-300">
+        <div className="fixed top-20 left-4 right-4 sm:left-auto sm:right-6 lg:right-8 z-50 animate-in slide-in-from-top-5 fade-in duration-300">
             <div className={`max-w-sm w-full shadow-2xl rounded-xl pointer-events-auto border-l-4 ${bgColor} bg-white overflow-hidden ring-1 ring-black ring-opacity-5`}>
                 <div className="p-4">
                     <div className="flex items-start">
