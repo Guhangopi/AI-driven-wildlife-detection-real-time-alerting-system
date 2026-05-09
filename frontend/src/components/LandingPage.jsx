@@ -34,13 +34,13 @@ const LandingPage = () => {
                     </div>
                     
                     {/* Hero Image / Graphic */}
-                    <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-10 lg:mt-0 lg:mr-0 lg:max-w-none lg:flex-none xl:ml-32">
-                        <div className="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
-                            <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                    <div className="mx-auto mt-16 flex w-full max-w-2xl sm:mt-24 lg:ml-10 lg:mt-0 lg:mr-0 lg:max-w-none xl:ml-32 px-4 sm:px-0">
+                        <div className="w-full sm:max-w-5xl lg:max-w-none">
+                            <div className="rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                                 <img
                                     src="/images/hero-leopard.jpg"
                                     alt="Leopard Detection"
-                                    className="w-full max-w-[60rem] rounded-md shadow-2xl ring-1 ring-gray-900/10 opacity-90"
+                                    className="w-full h-auto object-cover rounded-md shadow-2xl ring-1 ring-gray-900/10 opacity-90"
                                     onError={(e) => {
                                         e.target.onerror = null; 
                                         e.target.src = "https://placehold.co/1920x1080?text=Leopard+Image+Not+Found";
