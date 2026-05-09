@@ -6,6 +6,7 @@ import AlertFeed from './components/AlertFeed';
 import ReportAlert from './components/ReportAlert';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
 import UsersList from './components/UsersList';
 import GlobalNotification from './components/GlobalNotification';
 import Footer from './components/Footer';
@@ -24,6 +25,7 @@ function App() {
             <Route path="/report" element={<ReportAlert />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/admin/users" element={<UsersList />} />
             {/* Add more routes as needed */}
           </Routes>

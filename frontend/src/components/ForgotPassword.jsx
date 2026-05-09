@@ -1,34 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Phone, ArrowRight, Lock } from 'lucide-react';
+import { Phone, ArrowRight, Lock, ArrowLeft } from 'lucide-react';
 
-const Login = () => {
+const ForgotPassword = () => {
   const [mobile, setMobile] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');
+  const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
+    setSuccessMsg('');
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile_number: mobile, password: password, role: role }),
+        body: JSON.stringify({ mobile_number: mobile, new_password: newPassword }),
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/dashboard');
+        setSuccessMsg('Password reset successfully! You can now login.');
+        setTimeout(() => navigate('/login'), 3000);
       } else {
-        setErrorMsg(data.error || 'Login failed. Please check your credentials.');
+        setErrorMsg(data.error || 'Failed to reset password.');
       }
     } catch (error) {
-        console.error("Login failed", error);
+        console.error("Reset failed", error);
         setErrorMsg("Failed to connect to the server. Ensure backend is running.");
     } finally {
       setLoading(false);
@@ -43,21 +44,31 @@ const Login = () => {
       </div>
 
       <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-xl p-6 sm:p-10 rounded-3xl shadow-2xl border border-white/50 z-10 relative">
-        <div className="text-center">
+        <div>
+          <Link to="/login" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-nature-600 transition-colors mb-4">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            Back to Login
+          </Link>
           <div className="mx-auto h-16 w-16 bg-nature-100 rounded-full flex items-center justify-center mb-6">
-            <Phone className="h-8 w-8 text-nature-600" />
+            <Lock className="h-8 w-8 text-nature-600" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
-            Welcome Back
+          <h2 className="text-3xl font-bold text-gray-900 tracking-tight text-center">
+            Reset Password
           </h2>
-          <p className="mt-3 text-gray-600">
-            Sign in to access the <span className="font-semibold text-nature-700">WildAlert</span> dashboard.
+          <p className="mt-3 text-gray-600 text-center">
+            Enter your registered mobile number to create a new password.
           </p>
         </div>
 
         {errorMsg && (
           <div className="mt-4 p-3 animate-in fade-in slide-in-from-top-2 rounded-xl bg-red-50 border border-red-200 text-sm font-medium text-red-600 text-center shadow-sm">
             {errorMsg}
+          </div>
+        )}
+        
+        {successMsg && (
+          <div className="mt-4 p-3 animate-in fade-in slide-in-from-top-2 rounded-xl bg-green-50 border border-green-200 text-sm font-medium text-green-700 text-center shadow-sm">
+            {successMsg}
           </div>
         )}
 
@@ -77,16 +88,17 @@ const Login = () => {
                   type="tel"
                   required
                   className="block w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all shadow-sm"
-                  placeholder="Enter your mobile number"
+                  placeholder="Enter your registered mobile"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
+                  disabled={successMsg !== ''}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
+                New Password
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -98,85 +110,29 @@ const Login = () => {
                   type="password"
                   required
                   className="block w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all shadow-sm"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your new password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  disabled={successMsg !== ''}
                 />
-              </div>
-              <div className="mt-2 text-right">
-                <Link to="/forgot-password" className="text-sm font-medium text-nature-600 hover:text-nature-500 transition-colors">
-                  Forgot Password?
-                </Link>
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                I am logging in as a...
-              </label>
-              <div className="flex flex-wrap gap-4 sm:gap-x-4 gap-y-3">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="student"
-                    checked={role === 'student'}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
-                  />
-                  <span className="text-gray-700 font-medium">Student</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="staff"
-                    checked={role === 'staff'}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
-                  />
-                  <span className="text-gray-700 font-medium">Staff Member</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer ml-auto">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="admin"
-                    checked={role === 'admin'}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
-                  />
-                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Admin</span>
-                </label>
               </div>
             </div>
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || successMsg !== ''}
             className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-nature-600 hover:bg-nature-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nature-600 transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-nature-600/30 transform hover:-translate-y-0.5"
           >
             <span className="absolute left-0 inset-y-0 flex items-center pl-4">
               <ArrowRight className="h-5 w-5 text-nature-200 group-hover:text-white transition-colors" />
             </span>
-            {loading ? 'Signing in...' : 'Sign In to Dashboard'}
+            {loading ? 'Processing...' : 'Reset Password'}
           </button>
         </form>
-        
-        <div className="mt-6 text-center text-xs text-gray-500">
-          By signing in, you agree to our Terms of Service and Privacy Policy.
-        </div>
-
-        <div className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-nature-600 hover:text-nature-500 transition-colors">
-            Register now
-          </Link>
-        </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ForgotPassword;

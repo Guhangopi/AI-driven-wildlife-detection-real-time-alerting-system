@@ -341,5 +341,35 @@ def get_users():
     users = User.query.all()
     return jsonify([user.to_dict() for user in users])
 
+@app.route('/api/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    user = User.query.get_or_404(user_id)
+    data = request.json
+    
+    if 'name' in data:
+        user.name = data['name']
+    if 'password' in data and data['password']:
+        user.password = data['password']
+        
+    db.session.commit()
+    return jsonify({"message": "User updated successfully", "user": user.to_dict()}), 200
+
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    data = request.json
+    mobile = data.get('mobile_number')
+    new_password = data.get('new_password')
+    
+    if not mobile or not new_password:
+        return jsonify({"error": "Mobile number and new password are required"}), 400
+        
+    user = User.query.filter_by(mobile_number=mobile).first()
+    if not user:
+        return jsonify({"error": "No account found with this mobile number"}), 404
+        
+    user.password = new_password
+    db.session.commit()
+    return jsonify({"message": "Password reset successfully"}), 200
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
