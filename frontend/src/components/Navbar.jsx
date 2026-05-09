@@ -53,7 +53,8 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="-mr-2 flex md:hidden">
+          <div className="-mr-2 hidden">
+            {/* Hamburger menu is disabled on mobile in favor of BottomNav */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-nature-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nature-500 transition-colors"

@@ -9,11 +9,12 @@ import Register from './components/Register';
 import UsersList from './components/UsersList';
 import GlobalNotification from './components/GlobalNotification';
 import Footer from './components/Footer';
+import BottomNav from './components/BottomNav';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-gray-50 flex flex-col pb-16 md:pb-0">
         <Navbar />
         <GlobalNotification />
         <main className="flex-grow pt-16">
@@ -28,6 +29,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <BottomNav />
       </div>
     </Router>
   );

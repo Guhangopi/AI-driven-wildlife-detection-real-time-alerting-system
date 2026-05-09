@@ -47,7 +47,7 @@ const Register = () => {
          <div className="absolute top-[20%] -right-[10%] w-[60vh] h-[60vh] rounded-full bg-nature-300/20 blur-3xl" />
       </div>
 
-      <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl border border-white/50 z-10 relative">
+      <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-xl p-6 sm:p-10 rounded-3xl shadow-2xl border border-white/50 z-10 relative">
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-nature-100 rounded-full flex items-center justify-center mb-6">
             <User className="h-8 w-8 text-nature-600" />
@@ -129,7 +129,7 @@ const Register = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 I am registering as a...
               </label>
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-4 sm:gap-x-4 gap-y-3">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"

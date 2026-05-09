@@ -61,29 +61,29 @@ const UsersList = () => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-gray-50 border-b border-gray-100">
-                                <th className="py-4 px-6 text-sm font-semibold text-gray-600">Name</th>
-                                <th className="py-4 px-6 text-sm font-semibold text-gray-600">Mobile (ID)</th>
-                                <th className="py-4 px-6 text-sm font-semibold text-gray-600">Role</th>
+                                <th className="py-4 px-6 text-sm font-semibold text-gray-600 whitespace-nowrap">Name</th>
+                                <th className="py-4 px-6 text-sm font-semibold text-gray-600 whitespace-nowrap">Mobile (ID)</th>
+                                <th className="py-4 px-6 text-sm font-semibold text-gray-600 whitespace-nowrap">Role</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {users.map(user => (
                                 <tr key={user.id} className="hover:bg-nature-50/30 transition-colors">
-                                    <td className="py-4 px-6">
+                                    <td className="py-4 px-6 whitespace-nowrap">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-nature-100 flex items-center justify-center text-nature-600">
+                                            <div className="w-10 h-10 rounded-full bg-nature-100 flex items-center justify-center text-nature-600 shrink-0">
                                                 <UserIcon className="w-5 h-5" />
                                             </div>
                                             <span className="font-medium text-gray-900">{user.name}</span>
                                         </div>
                                     </td>
-                                    <td className="py-4 px-6">
+                                    <td className="py-4 px-6 whitespace-nowrap">
                                         <div className="flex items-center gap-2 text-gray-600">
-                                            <Phone className="w-4 h-4 text-gray-400" />
+                                            <Phone className="w-4 h-4 text-gray-400 shrink-0" />
                                             {user.mobile_number}
                                         </div>
                                     </td>
-                                    <td className="py-4 px-6">
+                                    <td className="py-4 px-6 whitespace-nowrap">
                                         <span className={`px-3 py-1 text-xs font-bold rounded-full flex items-center w-max gap-1
                                             ${user.role === 'admin' ? 'bg-purple-100 text-purple-700 border border-purple-200' 
                                             : user.role === 'staff' ? 'bg-blue-100 text-blue-700 border border-blue-200'
