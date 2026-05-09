@@ -47,8 +47,8 @@ const EditProfileModal = ({ isOpen, onClose, user, onSaveSuccess }) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[80vh] sm:max-h-[90vh]">
+        <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
           <h2 className="text-xl font-bold text-gray-900 tracking-tight">Edit Profile</h2>
           <button 
             onClick={onClose}
@@ -58,14 +58,14 @@ const EditProfileModal = ({ isOpen, onClose, user, onSaveSuccess }) => {
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto">
+        <div className="p-5 overflow-y-auto">
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-100 text-sm font-medium text-red-600 text-center">
+            <div className="mb-3 p-2.5 rounded-xl bg-red-50 border border-red-100 text-sm font-medium text-red-600 text-center">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
               <div className="relative group">
@@ -77,7 +77,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSaveSuccess }) => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all"
+                  className="block w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all"
                 />
               </div>
             </div>
@@ -88,9 +88,9 @@ const EditProfileModal = ({ isOpen, onClose, user, onSaveSuccess }) => {
                 type="text"
                 disabled
                 value={user?.mobile_number || ''}
-                className="block w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 cursor-not-allowed"
+                className="block w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 cursor-not-allowed"
               />
-              <p className="text-xs text-gray-500 mt-1 ml-1">Mobile number cannot be changed as it is your login ID.</p>
+              <p className="text-xs text-gray-500 mt-1 ml-1 leading-tight">Mobile number cannot be changed as it is your login ID.</p>
             </div>
 
             <div>
@@ -104,23 +104,23 @@ const EditProfileModal = ({ isOpen, onClose, user, onSaveSuccess }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Leave blank to keep current password"
-                  className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all"
+                  className="block w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all"
                 />
               </div>
             </div>
 
-            <div className="pt-2 flex gap-3">
+            <div className="pt-1 flex gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full flex justify-center items-center gap-2 py-3.5 px-4 border border-gray-300 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nature-600 transition-all shadow-sm"
+                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-gray-300 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nature-600 transition-all shadow-sm"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center items-center gap-2 py-3.5 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-nature-600 hover:bg-nature-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nature-600 transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-md hover:shadow-nature-600/30"
+                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-nature-600 hover:bg-nature-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nature-600 transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-md hover:shadow-nature-600/30"
               >
                 <Save className="w-4 h-4" />
                 {loading ? 'Saving...' : 'Save'}
