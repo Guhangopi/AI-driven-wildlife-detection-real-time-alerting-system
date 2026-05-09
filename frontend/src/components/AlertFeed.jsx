@@ -249,6 +249,23 @@ const AlertFeed = () => {
             </div>
 
             <CampusMap hotzones={hotzones} />
+            
+            {/* Telegram Join Banner */}
+            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#0088cc] rounded-full flex items-center justify-center shrink-0">
+                        <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.94z"/></svg>
+                    </div>
+                    <div>
+                        <h3 className="text-blue-900 font-bold text-sm sm:text-base">Get Instant Mobile Alerts</h3>
+                        <p className="text-blue-700 text-xs sm:text-sm">Join our Telegram group to receive real-time notifications.</p>
+                    </div>
+                </div>
+                <a href="https://t.me/+4-CZQz0YDY9hNmQ1" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto text-center px-5 py-2.5 bg-[#0088cc] hover:bg-[#0077b5] text-white font-semibold rounded-xl text-sm transition-colors shadow-sm shrink-0">
+                    Join Group
+                </a>
+            </div>
+
             <HotZonesWidget hotzones={hotzones} />
 
             <div className="space-y-4 sm:space-y-6">
