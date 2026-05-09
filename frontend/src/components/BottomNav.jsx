@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, AlertTriangle, Activity } from 'lucide-react';
+import { Home, AlertTriangle, Activity, Users } from 'lucide-react';
 
 const BottomNav = () => {
   const location = useLocation();
+  const storedUser = localStorage.getItem('user');
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  const isAdmin = user && user.role === 'admin';
 
   const isActive = (path) => location.pathname === path;
 
@@ -33,6 +36,16 @@ const BottomNav = () => {
           <AlertTriangle className="w-6 h-6" />
           <span className="text-[10px] font-medium">Report</span>
         </Link>
+
+        {isAdmin && (
+          <Link 
+            to="/admin/users" 
+            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/admin/users') ? 'text-nature-600' : 'text-gray-500 hover:text-gray-900'}`}
+          >
+            <Users className="w-6 h-6" />
+            <span className="text-[10px] font-medium">Users</span>
+          </Link>
+        )}
       </div>
     </div>
   );
