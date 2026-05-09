@@ -341,18 +341,24 @@ def get_users():
     users = User.query.all()
     return jsonify([user.to_dict() for user in users])
 
-@app.route('/api/users/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
+@app.route('/api/users/<int:user_id>', methods=['PUT', 'DELETE'])
+def handle_user(user_id):
     user = User.query.get_or_404(user_id)
-    data = request.json
     
-    if 'name' in data:
-        user.name = data['name']
-    if 'password' in data and data['password']:
-        user.password = data['password']
+    if request.method == 'DELETE':
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message": "User deleted successfully"}), 200
         
-    db.session.commit()
-    return jsonify({"message": "User updated successfully", "user": user.to_dict()}), 200
+    if request.method == 'PUT':
+        data = request.json
+        if 'name' in data:
+            user.name = data['name']
+        if 'password' in data and data['password']:
+            user.password = data['password']
+            
+        db.session.commit()
+        return jsonify({"message": "User updated successfully", "user": user.to_dict()}), 200
 
 @app.route('/api/reset-password', methods=['POST'])
 def reset_password():
