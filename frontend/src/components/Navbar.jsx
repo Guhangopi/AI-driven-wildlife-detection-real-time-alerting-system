@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShieldAlert, Menu, X, LogOut } from 'lucide-react';
+import { ShieldAlert, User as UserIcon, LogOut } from 'lucide-react';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
   const location = useLocation(); // Force re-render on route changes (like after login redirect)
   const navigate = useNavigate();
   const storedUser = localStorage.getItem('user');
@@ -53,32 +52,21 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="-mr-2 hidden">
-            {/* Hamburger menu is disabled on mobile in favor of BottomNav */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-nature-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nature-500 transition-colors"
-            >
-              <span className="sr-only">Open main menu</span>
-              {isOpen ? <X className="block h-6 w-6" /> : <Menu className="block h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className="md:hidden animate-fade-in-down">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-b border-gray-100 shadow-lg">
-            <Link to="/dashboard" className="text-gray-600 hover:text-nature-600 block px-3 py-2 rounded-md text-base font-medium">Live Dashboard</Link>
-            <Link to="/report" className="text-gray-600 hover:text-nature-600 block px-3 py-2 rounded-md text-base font-medium">Report Incident</Link>
-            {!user ? (
-                <Link to="/login" className="bg-nature-50 text-nature-700 block px-3 py-2 rounded-md text-base font-medium">Login</Link>
+          <div className="md:hidden flex items-center">
+            {user ? (
+              <button onClick={handleLogout} className="flex items-center gap-1.5 bg-nature-50 border border-nature-200 px-3 py-1.5 rounded-full text-nature-700 hover:bg-nature-100 transition-colors shadow-sm">
+                <UserIcon className="w-4 h-4" />
+                <span className="text-xs font-bold">Logout</span>
+              </button>
             ) : (
-                <button onClick={handleLogout} className="w-full text-left text-red-600 hover:bg-red-50 block px-3 py-2 rounded-md text-base font-medium">Logout</button>
+              <Link to="/login" className="flex items-center gap-1.5 bg-nature-50 border border-nature-200 px-3 py-1.5 rounded-full text-nature-700 hover:bg-nature-100 transition-colors shadow-sm">
+                <UserIcon className="w-4 h-4" />
+                <span className="text-xs font-bold">Profile</span>
+              </Link>
             )}
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
