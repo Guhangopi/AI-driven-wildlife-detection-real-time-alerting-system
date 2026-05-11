@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Phone, ArrowRight, Lock } from 'lucide-react';
+import { Phone, ArrowRight, Lock, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');
+  const [role, setRole] = useState('user');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -95,13 +96,20 @@ const Login = () => {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  className="block w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all shadow-sm"
+                  className="block w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all shadow-sm"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-nature-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
               <div className="mt-2 text-right">
                 <Link to="/forgot-password" className="text-sm font-medium text-nature-600 hover:text-nature-500 transition-colors">
@@ -119,23 +127,12 @@ const Login = () => {
                   <input
                     type="radio"
                     name="role"
-                    value="student"
-                    checked={role === 'student'}
+                    value="user"
+                    checked={role === 'user'}
                     onChange={(e) => setRole(e.target.value)}
                     className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
                   />
-                  <span className="text-gray-700 font-medium">Student</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="staff"
-                    checked={role === 'staff'}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
-                  />
-                  <span className="text-gray-700 font-medium">Staff Member</span>
+                  <span className="text-gray-700 font-medium">General User</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer ml-auto">
                   <input

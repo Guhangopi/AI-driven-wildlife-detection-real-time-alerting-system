@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Phone, Lock, ArrowRight, Check } from 'lucide-react';
+import { User, Phone, Lock, ArrowRight, Check, Eye, EyeOff } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     mobile_number: '',
     password: '',
-    role: 'student'
+    role: 'user'
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -142,13 +143,20 @@ const Register = () => {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  className="block w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all shadow-sm"
+                  className="block w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-nature-500/50 focus:border-nature-500 transition-all shadow-sm"
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleChange}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-nature-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
             </div>
 
@@ -161,23 +169,23 @@ const Register = () => {
                   <input
                     type="radio"
                     name="role"
-                    value="student"
-                    checked={formData.role === 'student'}
+                    value="user"
+                    checked={formData.role === 'user'}
                     onChange={handleChange}
                     className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
                   />
-                  <span className="text-gray-700 font-medium">Student</span>
+                  <span className="text-gray-700 font-medium">General User</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer ml-auto">
                   <input
                     type="radio"
                     name="role"
-                    value="staff"
-                    checked={formData.role === 'staff'}
+                    value="admin"
+                    checked={formData.role === 'admin'}
                     onChange={handleChange}
                     className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
                   />
-                  <span className="text-gray-700 font-medium">Staff Member</span>
+                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Admin</span>
                 </label>
               </div>
             </div>

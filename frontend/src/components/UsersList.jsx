@@ -79,7 +79,7 @@ const UsersList = () => {
                     <Users className="w-8 h-8 text-nature-600" />
                     User Directory
                 </h1>
-                <p className="text-gray-500 mt-2">Manage and view registered staff and students.</p>
+                <p className="text-gray-500 mt-2">Manage and view registered administrators and general users.</p>
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -113,7 +113,6 @@ const UsersList = () => {
                                     <td className="py-4 px-6 whitespace-nowrap">
                                         <span className={`px-3 py-1 text-xs font-bold rounded-full flex items-center w-max gap-1
                                             ${user.role === 'admin' ? 'bg-purple-100 text-purple-700 border border-purple-200' 
-                                            : user.role === 'staff' ? 'bg-blue-100 text-blue-700 border border-blue-200'
                                             : 'bg-gray-100 text-gray-700 border border-gray-200'}`}>
                                             {user.role === 'admin' && <Shield className="w-3 h-3" />}
                                             {user.role.charAt(0).toUpperCase() + user.role.slice(1)}

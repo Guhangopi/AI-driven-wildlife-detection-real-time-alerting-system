@@ -60,7 +60,7 @@ const LandingPage = () => {
                         Everything you need to ensure campus safety
                     </p>
                     <p className="mt-6 text-lg leading-8 text-gray-600">
-                        Our system utilizes state-of-the-art computer vision to identify potential threats and notify security personnel and students immediately.
+                        Our system utilizes state-of-the-art computer vision to identify potential threats and notify security personnel and users immediately.
                     </p>
                 </div>
                 <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
@@ -84,7 +84,7 @@ const LandingPage = () => {
                                 Instant Alerts
                             </dt>
                             <dd className="mt-2 text-base leading-7 text-gray-600">
-                                Real-time notifications sent to student's mobile devices and dashboards the moment a threat is detected.
+                                Real-time notifications sent to users' mobile devices and dashboards the moment a threat is detected.
                             </dd>
                         </div>
                         <div className="relative pl-16">
@@ -106,7 +106,7 @@ const LandingPage = () => {
                                 Community Reporting
                             </dt>
                             <dd className="mt-2 text-base leading-7 text-gray-600">
-                                Enables students and staff to manually report sightings, creating a collaborative safety network.
+                                Enables users and community members to manually report sightings, creating a collaborative safety network.
                             </dd>
                         </div>
                     </dl>

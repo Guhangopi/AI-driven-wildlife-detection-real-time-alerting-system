@@ -38,7 +38,7 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     mobile_number = db.Column(db.String(15), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.String(20), default='student') # student, staff, admin
+    role = db.Column(db.String(20), default='user') # user, admin
 
     def to_dict(self):
         return {
@@ -95,7 +95,7 @@ def register():
     name = data.get('name')
     mobile = data.get('mobile_number')
     password = data.get('password')
-    role = data.get('role', 'student')
+    role = data.get('role', 'user')
 
     if not name or not mobile or not password:
         return jsonify({"error": "Name, Mobile Number, and Password are required"}), 400
@@ -115,7 +115,7 @@ def login():
     data = request.json
     mobile = data.get('mobile_number', '').strip()
     password = data.get('password', '').strip()
-    role = data.get('role', 'student').strip()
+    role = data.get('role', 'user').strip()
 
     if not mobile or not password:
         return jsonify({"error": "Mobile number and password are required"}), 400
