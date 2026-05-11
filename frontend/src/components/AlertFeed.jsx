@@ -258,11 +258,11 @@ const AlertFeed = () => {
                     </div>
                     <div>
                         <h3 className="text-blue-900 font-bold text-sm sm:text-base">Get Instant Mobile Alerts</h3>
-                        <p className="text-blue-700 text-xs sm:text-sm">Join our Telegram group to receive real-time notifications.</p>
+                        <p className="text-blue-700 text-xs sm:text-sm">Join our Telegram channel to receive real-time notifications.</p>
                     </div>
                 </div>
-                <a href="https://t.me/+4-CZQz0YDY9hNmQ1" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto text-center px-5 py-2.5 bg-[#0088cc] hover:bg-[#0077b5] text-white font-semibold rounded-xl text-sm transition-colors shadow-sm shrink-0">
-                    Join Group
+                <a href="https://t.me/+fAHbyw9iIu42YTU1" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto text-center px-5 py-2.5 bg-[#0088cc] hover:bg-[#0077b5] text-white font-semibold rounded-xl text-sm transition-colors shadow-sm shrink-0">
+                    Join Telegram Alerts Channel
                 </a>
             </div>
 

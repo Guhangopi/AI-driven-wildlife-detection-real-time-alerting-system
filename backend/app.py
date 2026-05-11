@@ -4,7 +4,7 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 app = Flask(__name__)
 CORS(app)
@@ -113,9 +113,9 @@ def register():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
-    mobile = data.get('mobile_number')
-    password = data.get('password')
-    role = data.get('role', 'student')
+    mobile = data.get('mobile_number', '').strip()
+    password = data.get('password', '').strip()
+    role = data.get('role', 'student').strip()
 
     if not mobile or not password:
         return jsonify({"error": "Mobile number and password are required"}), 400
