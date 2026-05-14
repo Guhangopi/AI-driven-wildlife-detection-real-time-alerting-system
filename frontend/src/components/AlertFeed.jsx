@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Clock, AlertTriangle, ShieldAlert, AlertOctagon, Flame, Edit2, Trash2, X, Check } from 'lucide-react';
+import { MapPin, Clock, AlertTriangle, ShieldAlert, AlertOctagon, Flame, Edit2, Trash2, X, Check, Volume2, VolumeX } from 'lucide-react';
 import CampusMap from './CampusMap';
 
 const AlertCard = ({ alert, isAdmin, onDelete, onUpdate }) => {
@@ -160,6 +160,8 @@ const AlertFeed = () => {
     const [alerts, setAlerts] = useState([]);
     const [hotzones, setHotzones] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+    const [lastAlertId, setLastAlertId] = useState(null);
     
     // Check if the current user is an admin
     const storedUser = localStorage.getItem('user');
@@ -179,13 +181,49 @@ const AlertFeed = () => {
                 fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/hotzones`)
             ]);
             
-            if (alertsRes.ok) setAlerts(await alertsRes.json());
+            if (alertsRes.ok) {
+                const newAlerts = await alertsRes.json();
+                
+                // Voice Alert Logic
+                if (newAlerts.length > 0) {
+                    const latest = newAlerts[0];
+                    // If we have a new alert ID and voice is enabled
+                    if (lastAlertId !== null && latest.id !== lastAlertId && isVoiceEnabled) {
+                        speakAlert(latest);
+                    }
+                    setLastAlertId(latest.id);
+                } else {
+                    setLastAlertId(0);
+                }
+                
+                setAlerts(newAlerts);
+            }
             if (hotzonesRes.ok) setHotzones(await hotzonesRes.json());
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
             setLoading(false);
         }
+    };
+
+    const speakAlert = (alert) => {
+        const message = `Attention! ${alert.species || 'Animal'} detected at ${alert.location}. ${alert.description}`;
+        const utterance = new SpeechSynthesisUtterance(message);
+        utterance.rate = 0.9; // Slightly slower for clarity
+        utterance.pitch = 1;
+        window.speechSynthesis.speak(utterance);
+    };
+
+    const toggleVoice = () => {
+        if (!isVoiceEnabled) {
+            // Warm up speech synthesis (required by some browsers)
+            const msg = new SpeechSynthesisUtterance("Voice alerts enabled");
+            msg.volume = 0; // Silent warm up
+            window.speechSynthesis.speak(msg);
+        } else {
+            window.speechSynthesis.cancel(); // Stop any current speaking
+        }
+        setIsVoiceEnabled(!isVoiceEnabled);
     };
 
     const handleDelete = async (id) => {
@@ -236,16 +274,28 @@ const AlertFeed = () => {
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
-            <div className="mb-6 flex justify-between items-end">
+            <div className="mb-6 flex justify-between items-start">
                 <div>
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Real-Time Alerts</h1>
                     <p className="text-sm text-gray-500 mt-1">Live feed from AI perimeter cameras</p>
                 </div>
-                {alerts.length > 0 && (
-                    <div className="flex items-center text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full animate-pulse">
-                        <span className="w-2 h-2 rounded-full bg-green-600 mr-1.5 flex-shrink-0"></span> LIVE
-                    </div>
-                )}
+                <div className="flex flex-col items-end gap-2">
+                    <button 
+                        onClick={toggleVoice}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm
+                            ${isVoiceEnabled 
+                                ? 'bg-nature-600 text-white hover:bg-nature-700' 
+                                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                    >
+                        {isVoiceEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+                        {isVoiceEnabled ? 'Voice Alerts ON' : 'Voice Alerts OFF'}
+                    </button>
+                    {alerts.length > 0 && (
+                        <div className="flex items-center text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full animate-pulse">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-600 mr-1.5 flex-shrink-0"></span> LIVE
+                        </div>
+                    )}
+                </div>
             </div>
 
             <CampusMap hotzones={hotzones} />
