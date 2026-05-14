@@ -1,7 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
+import datetime
+from datetime import timezone, timedelta
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -30,6 +32,12 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # END: Database Config
 
+# Configure IST Timezone
+IST = datetime.timezone(datetime.timedelta(hours=5, minutes=30))
+
+def get_ist_now():
+    return datetime.datetime.now(IST)
+
 db = SQLAlchemy(app)
 
 # Models
@@ -55,8 +63,8 @@ class Alert(db.Model):
     image_url = db.Column(db.String(200)) # Path to image
     species = db.Column(db.String(50))
     distance = db.Column(db.Float)
-    alert_level = db.Column(db.String(20)) # Info, Warning, Emergency
-    timestamp = db.Column(db.DateTime, server_default=db.func.now())
+    alert_level = db.Column(db.String(20), default='Info') # Info, Warning, Emergency
+    timestamp = db.Column(db.DateTime, default=get_ist_now)
 
     def to_dict(self):
         return {
@@ -86,7 +94,6 @@ def init_db():
 
 @app.route('/uploads/<filename>')
 def serve_image(filename):
-    from flask import send_from_directory
     return send_from_directory('uploads', filename)
 
 @app.route('/api/register', methods=['POST'])

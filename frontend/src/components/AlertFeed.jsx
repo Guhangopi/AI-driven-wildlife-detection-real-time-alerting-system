@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { MapPin, Clock, AlertTriangle, ShieldAlert, AlertOctagon, Flame, Edit2, Trash2, X, Check, Volume2, VolumeX } from 'lucide-react';
 import CampusMap from './CampusMap';
 
@@ -164,6 +164,8 @@ const AlertFeed = () => {
         return localStorage.getItem('voiceAlerts') === 'true';
     });
     const [lastAlertId, setLastAlertId] = useState(null);
+    const lastSpokenIdRef = useRef(localStorage.getItem('lastSpokenId'));
+    const lastSpeakTimeRef = useRef(0);
     
     // Check if the current user is an admin
     const storedUser = localStorage.getItem('user');
@@ -189,10 +191,25 @@ const AlertFeed = () => {
                 // Voice Alert Logic
                 if (newAlerts.length > 0) {
                     const latest = newAlerts[0];
-                    // If we have a new alert ID and voice is enabled
-                    if (lastAlertId !== null && latest.id !== lastAlertId && isVoiceEnabled) {
+                    
+                    // Trigger voice if:
+                    // 1. Voice is ON
+                    // 2. This alert ID hasn't been spoken yet (checked via Ref for sync safety)
+                    // 3. The alert is from today (within 12 hours)
+                    // 4. We haven't spoken in the last 15 seconds (prevents spamming)
+                    const alertTime = new Date(latest.timestamp).getTime();
+                    const now = new Date().getTime();
+                    const isToday = (now - alertTime) < 12 * 60 * 60 * 1000;
+                    const enoughTimePassed = (now - lastSpeakTimeRef.current) > 15000;
+
+                    if (isVoiceEnabled && latest.id.toString() !== lastSpokenIdRef.current && isToday && enoughTimePassed) {
+                        console.log("DEBUG: TRIGGERING VOICE ALERT for ID:", latest.id);
+                        lastSpokenIdRef.current = latest.id.toString();
+                        localStorage.setItem('lastSpokenId', latest.id.toString());
+                        lastSpeakTimeRef.current = now;
                         speakAlert(latest);
                     }
+                    
                     setLastAlertId(latest.id);
                 } else {
                     setLastAlertId(0);
@@ -210,7 +227,8 @@ const AlertFeed = () => {
 
     const speakAlert = (alert) => {
         console.log("DEBUG: Attempting to speak alert:", alert.id);
-        const message = `Attention! ${alert.species || 'Animal'} detected at ${alert.location}. ${alert.description}`;
+        const timeStr = new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const message = `Attention! ${alert.species || 'Animal'} detected at ${alert.location} at ${timeStr}. ${alert.description}`;
         const utterance = new SpeechSynthesisUtterance(message);
         utterance.rate = 0.9;
         utterance.pitch = 1;
