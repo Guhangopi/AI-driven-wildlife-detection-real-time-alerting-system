@@ -231,12 +231,25 @@ const AlertFeed = () => {
 
     const speakAlert = (alert) => {
         console.log("DEBUG: Attempting to speak alert:", alert.id);
+        
+        // On mobile, the speech engine can get 'stuck'. Resume is needed.
+        if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+        }
+
         const timeStr = new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const message = `Attention! ${alert.species || 'Animal'} detected at ${alert.location} at ${timeStr}. ${alert.description}`;
         const utterance = new SpeechSynthesisUtterance(message);
         utterance.rate = 0.9;
         utterance.pitch = 1;
         utterance.volume = 1;
+
+        // Optional: select a voice (mobile browsers often have specific ones)
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            utterance.voice = voices.find(v => v.lang.includes('en')) || voices[0];
+        }
+
         window.speechSynthesis.speak(utterance);
     };
 
