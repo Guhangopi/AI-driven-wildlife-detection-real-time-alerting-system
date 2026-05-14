@@ -114,7 +114,11 @@ const AlertCard = ({ alert, isAdmin, onDelete, onUpdate }) => {
               <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-2">
                  <Clock className="w-3.5 h-3.5 text-gray-400" />
               </div>
-              {new Date(alert.timestamp).toLocaleString()}
+              <span className="font-medium text-gray-700">
+                {new Date(alert.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                <span className="mx-2 text-gray-300">|</span>
+                {new Date(alert.timestamp).toLocaleDateString([], { day: '2-digit', month: 'short' })}
+              </span>
             </div>
           </div>
           

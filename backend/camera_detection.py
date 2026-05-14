@@ -52,39 +52,52 @@ def ai_worker_thread(custom_model, standard_model):
         
         new_detections = []
         current_frame_animal = None
-        
-        # --- PHASE 1: EXPERT DETECTION (Custom Model) ---
+        human_boxes = []
+
+        # --- PHASE 1: HUMAN DETECTION (Standard Model acts as a filter) ---
+        results_std = standard_model(frame_to_process, verbose=False, conf=0.4)
+        for result in results_std:
+            for box in result.boxes:
+                cls_id = int(box.cls[0])
+                if cls_id == 0: # Person
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    human_boxes.append((x1, y1, x2, y2))
+
+        # --- PHASE 2: EXPERT DETECTION (Custom Model) ---
         if custom_model:
-            results_custom = custom_model(frame_to_process, verbose=False, conf=0.5)
+            # Increase confidence to 0.8 to be MUCH more strict
+            results_custom = custom_model(frame_to_process, verbose=False, conf=0.8)
             for result in results_custom:
                 for box in result.boxes:
                     cls_id = int(box.cls[0])
                     class_name = custom_model.names[cls_id]
-                    # We prioritize the expert model for Leopards and Bears
-                    current_frame_animal = class_name
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    new_detections.append({"class_name": f"EXPERT: {class_name}", "box": (x1, y1, x2, y2)})
+                    cx1, cy1, cx2, cy2 = map(int, box.xyxy[0])
+                    
+                    # ANTI-HUMAN CHECK: Does this leopard overlap with a detected person?
+                    is_actually_human = False
+                    for hx1, hy1, hx2, hy2 in human_boxes:
+                        # Check for box intersection/overlap
+                        if not (cx2 < hx1 or cx1 > hx2 or cy2 < hy1 or cy1 > hy2):
+                            is_actually_human = True
+                            break
+                    
+                    if not is_actually_human:
+                        current_frame_animal = class_name
+                        new_detections.append({"class_name": f"EXPERT: {class_name}", "box": (cx1, cy1, cx2, cy2)})
+                    else:
+                        print("DEBUG: Ignored Leopard detection (Actually a Human)")
 
-        # --- PHASE 2: COMMON DETECTION (Standard Model) ---
-        # We run this to catch everything else (Dog, Cow, Elephant, etc.)
-        results_std = standard_model(frame_to_process, verbose=False, conf=0.5)
+        # --- PHASE 3: OTHER WILD ANIMALS ---
         for result in results_std:
             for box in result.boxes:
                 cls_id = int(box.cls[0])
                 class_name = standard_model.names[cls_id]
-                
-                # List of WILD animals only
-                # 20:elephant, 21:bear, 22:zebra, 23:giraffe
-                # We OMIT 0:person, 15:cat, 16:dog, 17:horse, 18:sheep, 19:cow
-                WILD_ANIMALS = [20, 21, 22, 23]
+                WILD_ANIMALS = [20, 21, 22, 23] # Elephant, Bear, Zebra, Giraffe
                 
                 if cls_id in WILD_ANIMALS:
-                    # Prevent duplicate alerts if expert already caught it
                     if not current_frame_animal:
                         current_frame_animal = class_name
-                        
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    # Add as 'Common' detection
                     new_detections.append({"class_name": class_name, "box": (x1, y1, x2, y2)})
                     
         # Update safely for main thread
