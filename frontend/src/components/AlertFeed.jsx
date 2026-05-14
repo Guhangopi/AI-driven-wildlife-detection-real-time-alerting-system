@@ -160,7 +160,9 @@ const AlertFeed = () => {
     const [alerts, setAlerts] = useState([]);
     const [hotzones, setHotzones] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+    const [isVoiceEnabled, setIsVoiceEnabled] = useState(() => {
+        return localStorage.getItem('voiceAlerts') === 'true';
+    });
     const [lastAlertId, setLastAlertId] = useState(null);
     
     // Check if the current user is an admin
@@ -207,23 +209,29 @@ const AlertFeed = () => {
     };
 
     const speakAlert = (alert) => {
+        console.log("DEBUG: Attempting to speak alert:", alert.id);
         const message = `Attention! ${alert.species || 'Animal'} detected at ${alert.location}. ${alert.description}`;
         const utterance = new SpeechSynthesisUtterance(message);
-        utterance.rate = 0.9; // Slightly slower for clarity
+        utterance.rate = 0.9;
         utterance.pitch = 1;
+        utterance.volume = 1;
         window.speechSynthesis.speak(utterance);
     };
 
     const toggleVoice = () => {
         if (!isVoiceEnabled) {
-            // Warm up speech synthesis (required by some browsers)
-            const msg = new SpeechSynthesisUtterance("Voice alerts enabled");
-            msg.volume = 0; // Silent warm up
+            console.log("DEBUG: Voice alerts enabled. Warming up...");
+            // Non-silent warm up so user knows it's working
+            const msg = new SpeechSynthesisUtterance("Voice alerts activated");
+            msg.volume = 1; 
             window.speechSynthesis.speak(msg);
         } else {
-            window.speechSynthesis.cancel(); // Stop any current speaking
+            console.log("DEBUG: Voice alerts disabled.");
+            window.speechSynthesis.cancel();
         }
-        setIsVoiceEnabled(!isVoiceEnabled);
+        const newState = !isVoiceEnabled;
+        setIsVoiceEnabled(newState);
+        localStorage.setItem('voiceAlerts', newState);
     };
 
     const handleDelete = async (id) => {
