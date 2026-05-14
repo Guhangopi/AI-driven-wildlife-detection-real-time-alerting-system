@@ -30,8 +30,8 @@ ai_fps = 0
 ai_thread_running = True
 camera_fps = 0
 
-def ai_worker_thread(model, using_custom_model):
-    """Background thread to run YOLO inference so the camera feed doesn't lag."""
+def ai_worker_thread(custom_model, standard_model):
+    """Background thread to run Dual YOLO inference."""
     global shared_frame, shared_detections, ai_fps, ai_thread_running
     
     prev_time = 0
@@ -42,55 +42,59 @@ def ai_worker_thread(model, using_custom_model):
             time.sleep(0.01)
             continue
             
-        # Safely copy the frame so we don't interfere with the camera thread
         frame_to_process = copy.deepcopy(shared_frame)
-        
-        # Calculate exact AI FPS
         new_time = time.time()
+        
+        # Performance monitoring
         fps_value = 1 / (new_time - prev_time) if prev_time > 0 else 0
         prev_time = new_time
         ai_fps = int(fps_value)
         
-        # Run inference
-        results = model(frame_to_process, verbose=False, conf=CONFIDENCE_THRESHOLD)
-        
         new_detections = []
         current_frame_animal = None
         
-        for result in results:
-            boxes = result.boxes
-            for box in boxes:
-                cls_id = int(box.cls[0])
-                class_name = None
-                
-                if using_custom_model:
-                    class_name = model.names[cls_id]
-                else:
-                    if cls_id in COCO_FALLBACK_CLASSES:
-                        class_name = COCO_FALLBACK_CLASSES[cls_id]
-                        conf = float(box.conf[0])
-                        # Critical Fix: Prevent humans from triggering "Leopard" via poor Cat misclassifications
-                        if cls_id == 15 and conf < 0.65:
-                            class_name = None # Ignore low confidence cats
-                            
-                if class_name:
+        # --- PHASE 1: EXPERT DETECTION (Custom Model) ---
+        if custom_model:
+            results_custom = custom_model(frame_to_process, verbose=False, conf=0.5)
+            for result in results_custom:
+                for box in result.boxes:
+                    cls_id = int(box.cls[0])
+                    class_name = custom_model.names[cls_id]
+                    # We prioritize the expert model for Leopards and Bears
                     current_frame_animal = class_name
-                    # Save bounding box for main thread to draw
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    new_detections.append({
-                        "class_name": class_name,
-                        "box": (x1, y1, x2, y2)
-                    })
+                    new_detections.append({"class_name": f"EXPERT: {class_name}", "box": (x1, y1, x2, y2)})
+
+        # --- PHASE 2: COMMON DETECTION (Standard Model) ---
+        # We run this to catch everything else (Dog, Cow, Elephant, etc.)
+        results_std = standard_model(frame_to_process, verbose=False, conf=0.5)
+        for result in results_std:
+            for box in result.boxes:
+                cls_id = int(box.cls[0])
+                class_name = standard_model.names[cls_id]
+                
+                # List of WILD animals only
+                # 20:elephant, 21:bear, 22:zebra, 23:giraffe
+                # We OMIT 0:person, 15:cat, 16:dog, 17:horse, 18:sheep, 19:cow
+                WILD_ANIMALS = [20, 21, 22, 23]
+                
+                if cls_id in WILD_ANIMALS:
+                    # Prevent duplicate alerts if expert already caught it
+                    if not current_frame_animal:
+                        current_frame_animal = class_name
+                        
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    # Add as 'Common' detection
+                    new_detections.append({"class_name": class_name, "box": (x1, y1, x2, y2)})
                     
         # Update safely for main thread
         shared_detections = new_detections
         
-        # Network Alert Logic (only alert if detection found and interval passed)
+        # Network Alert Logic
         if current_frame_animal and (new_time - last_alert_time > DETECTION_INTERVAL):
             detected_animal = current_frame_animal
-            print(f"Wild animal detected: {detected_animal}! Sending alert...")
+            print(f"Alert Triggered: {detected_animal} detected! Sending to dashboard...")
             
-            # Encode frame to base64
             _, buffer = cv2.imencode('.jpg', frame_to_process)
             jpg_as_text = base64.b64encode(buffer).decode('utf-8')
             
@@ -98,36 +102,33 @@ def ai_worker_thread(model, using_custom_model):
                 "location": "Main Entrance (Camera 1)",
                 "description": f"DANGER: {detected_animal.capitalize()} detected!",
                 "species": detected_animal,
-                "distance": 35.0, # default distance for mock
+                "distance": 25.0,
                 "image_data": jpg_as_text
             }
             
             try:
                 response = requests.post(BACKEND_URL, json=payload)
                 if response.status_code == 201:
-                    print(f"Alert sent! {datetime.datetime.now()}")
                     last_alert_time = new_time
-                else:
-                    print(f"Failed to send alert: {response.text}")
             except Exception as e:
                 print(f"Error sending alert: {e}")
 
 def capture_and_send():
     global shared_frame, shared_detections, ai_fps, ai_thread_running, camera_fps
     
-    print("Loading AI model... this might take a moment.")
+    print("Initializing Dual-AI System...")
     
+    # Load Standard Model (Common Animals)
+    standard_model = YOLO("yolov8s.pt")
+    
+    # Load Custom Model (Leopard Expert)
+    custom_model = None
     custom_model_path = os.path.join(os.path.dirname(__file__), 'custom_animal_model.pt')
     if os.path.exists(custom_model_path):
-        print(f"--> Found custom model! Loading exactly trained species from: {custom_model_path}")
-        model = YOLO(custom_model_path)
-        using_custom_model = True
+        print(f"--> Expert Model Loaded: {custom_model_path}")
+        custom_model = YOLO(custom_model_path)
     else:
-        print("--> Using default YOLOv8 COCO model (yolov8n.pt).")
-        print("    NOTE: For exact species like 'Leopard', please train a custom YOLO model.")
-        print("    Run 'train_custom_yolo.py' to generate 'custom_animal_model.pt'.")
-        model = YOLO("yolov8s.pt") # Upgraded to Small model for better accuracy
-        using_custom_model = False
+        print("--> Expert Model NOT FOUND. Using standard mode only.")
     
     if os.name == 'nt':
         cap = cv2.VideoCapture(CAMERA_ID, cv2.CAP_DSHOW)
@@ -138,10 +139,8 @@ def capture_and_send():
         print("Error: Could not open webcam.")
         return
         
-    print("Camera started. Detecting animals...")
-    
-    # Start the background AI Thread
-    ai_thread = threading.Thread(target=ai_worker_thread, args=(model, using_custom_model), daemon=True)
+    # Start the background AI Thread with BOTH models
+    ai_thread = threading.Thread(target=ai_worker_thread, args=(custom_model, standard_model), daemon=True)
     ai_thread.start()
     
     prev_frame_time = 0
