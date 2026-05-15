@@ -102,7 +102,9 @@ def register():
     name = data.get('name')
     mobile = data.get('mobile_number')
     password = data.get('password')
-    role = data.get('role', 'user')
+    # SECURITY FIX: Force all public registrations to be 'user' only.
+    # Admin accounts cannot be created via this public API.
+    role = 'user' 
 
     if not name or not mobile or not password:
         return jsonify({"error": "Name, Mobile Number, and Password are required"}), 400

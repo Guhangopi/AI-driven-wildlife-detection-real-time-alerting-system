@@ -161,33 +161,9 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                I am registering as a...
-              </label>
-              <div className="flex flex-wrap gap-4 sm:gap-x-4 gap-y-3">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="user"
-                    checked={formData.role === 'user'}
-                    onChange={handleChange}
-                    className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
-                  />
-                  <span className="text-gray-700 font-medium">General User</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer ml-auto">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="admin"
-                    checked={formData.role === 'admin'}
-                    onChange={handleChange}
-                    className="text-nature-600 focus:ring-nature-500 focus:ring-2 w-4 h-4 cursor-pointer"
-                  />
-                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Admin</span>
-                </label>
-              </div>
+              <p className="text-xs text-gray-400 italic text-center">
+                Registration is currently limited to General User accounts for security.
+              </p>
             </div>
           </div>
 
